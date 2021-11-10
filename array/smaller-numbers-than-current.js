@@ -1,6 +1,9 @@
 /**
  * @param {number[]} nums
  * @return {number[]}
+ * @constraints
+ * - 2 <= nums.length <= 500
+ * - 0 <= nums[i] <= 100
  */
 // eslint-disable-next-line no-unused-vars
 const smallerNumbersThanCurrent = (nums) => {
