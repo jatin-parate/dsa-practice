@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * @constraints
  * - 1 <= nums.length <= 5000
@@ -7,26 +8,15 @@
  */
 // eslint-disable-next-line no-unused-vars
 const sortArrayByParity = (nums) => {
-  const odd = [];
-  let currEven = 0;
+  let firstOdd = nums.findIndex((num) => num % 2 !== 0);
 
-  for (let i = 0; i < nums.length; i += 1) {
+  if (firstOdd === -1 || nums.length === 1) return nums;
+
+  for (let i = firstOdd; i < nums.length; i += 1) {
     if (nums[i] % 2 === 0) {
-      // even
-      // eslint-disable-next-line no-param-reassign
-      nums[currEven] = nums[i];
-      currEven += 1;
-    } else {
-      // odd
-      odd.push(nums[i]);
+      [nums[i], nums[firstOdd]] = [nums[firstOdd], nums[i]];
+      firstOdd += 1;
     }
-  }
-
-  console.log(odd);
-
-  for (let i = currEven; i < nums.length; i += 1) {
-    // eslint-disable-next-line no-param-reassign
-    nums[i] = odd[odd.length - i];
   }
 
   return nums;
