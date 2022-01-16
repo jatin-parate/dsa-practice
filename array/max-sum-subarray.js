@@ -1,5 +1,7 @@
 /**
- *
+ * @complexities
+ * - Time: O(n)
+ * - Space: O(1)
  * @param {number[]} list
  * @returns {number[]}
  */
