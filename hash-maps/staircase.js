@@ -5,6 +5,8 @@ import runWithTimestamp from '../utils/runWithTimestamp';
  * Given that the staircase has a total n steps,
  * write a function to count the number of possible ways in which child can run up the stairs.
  * @param {number} n
+ * @param {Map<number, number>} cache
+ * @returns {number}
  */
 const staircase = (n, cache = new Map()) => {
   if (cache.has(n)) {
