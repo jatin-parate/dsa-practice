@@ -1,4 +1,4 @@
-module.exports = (fn, callback = console.log, label = "start") => {
+module.exports = (fn, callback = console.log, label = 'start') => {
   console.time(label);
   const result = fn();
   console.timeEnd(label);
