@@ -32,6 +32,10 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/node": "^7.16.8",
-    "@babel/preset-env": "^7.16.11"
+    "@babel/preset-env": "^7.16.11",
+    "@types/immutable": "^3.8.7",
+    "immutable": "^4.0.0",
+    "ts-node": "^10.7.0",
+    "tsc": "^2.0.4"
   }
 }
