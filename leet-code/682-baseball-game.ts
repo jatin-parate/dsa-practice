@@ -1,3 +1,5 @@
+import assert from "assert";
+
 function calPoints(ops: string[]): number {
   const stack: number[] = [];
 
@@ -21,6 +23,6 @@ function calPoints(ops: string[]): number {
   return stack.reduce((prev, curr) => prev + curr, 0);
 }
 
-console.log(calPoints(["5", "2", "C", "D", "+"]));
-console.log(calPoints(["5", "-2", "4", "C", "D", "9", "+", "+"]));
-console.log(calPoints(["1"]));
+assert.equal(calPoints(["5", "2", "C", "D", "+"]), 30);
+assert.equal(calPoints(["5", "-2", "4", "C", "D", "9", "+", "+"]), 27);
+assert.equal(calPoints(["1"]), 1);
