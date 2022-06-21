@@ -1,36 +1,43 @@
 import assert from "assert";
 
-function buildString(str: string): Array<string> {
-  const output = [];
-
-  for (let char of str) {
-    if (char === "#") {
-      if (output.length > 0) output.pop();
-    } else {
-      output.push(char);
-    }
-  }
-
-  return output;
-}
-
 const backspaceCompare = (str1: string, str2: string): boolean => {
-  const s1 = buildString(str1);
-  const s2 = buildString(str2);
+  let p1 = str1.length - 1;
+  let p2 = str2.length - 1;
 
-  if (s1.length !== s2.length) {
-    return false;
-  }
-
-  for (let i = 0; i < s1.length; i += 1) {
-    if (s1[i] !== s2[i]) {
+  while (p1 > -1 || p2 > -1) {
+    let skipCount = 0;
+    if (str1[p1] === "#") {
+      skipCount = 2;
+      while (skipCount > 0) {
+        p1 -= 1;
+        skipCount -= 1;
+        if (str1[p1] === "#") {
+          skipCount += 2;
+        }
+      }
+      skipCount = 0;
+    }
+    if (str2[p2] === "#") {
+      skipCount = 2;
+      while (skipCount > 0) {
+        p2 -= 1;
+        skipCount -= 1;
+        if (str2[p2] === "#") {
+          skipCount += 2;
+        }
+      }
+    }
+    if (str1[p1] !== str2[p2]) {
       return false;
     }
+    p1 -= 1;
+    p2 -= 1;
   }
 
-  return true;
+  return p1 < 0 && p2 < 0;
 };
 
+assert.equal(backspaceCompare("nzp#o#g", "b#nzp#o#g"), true);
 assert.equal(backspaceCompare("xywrrmp", "xywrrmu#p"), true);
 assert.equal(backspaceCompare("ab#c", "ad#c"), true);
 assert.equal(backspaceCompare("ab##", "c#d#"), true);
