@@ -1,15 +1,17 @@
 import assert from "assert";
 
 const canSum = (targetSum: number, numbers: number[]): boolean => {
-  for (let i = 0; i < numbers.length; i += 1) {
-    for (let j = i; j < numbers.length; j += 1) {
-      let sum = 0;
-      for (let k = i; k <= j; k += 1) {
-        sum += numbers[k];
-      }
-      if (sum === targetSum) {
-        return true;
-      }
+  if (targetSum === 0) {
+    return true;
+  }
+
+  for (let number of numbers) {
+    let newTargetSum = targetSum - number;
+    if (newTargetSum === 0) {
+      return true;
+    }
+    if (newTargetSum > 0 && canSum(newTargetSum, numbers)) {
+      return true;
     }
   }
 
