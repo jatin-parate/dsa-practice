@@ -22,6 +22,7 @@ const flatten = (head: MultiLevelDoublyList | null) => {
         currNode.next.prev = tail;
       }
       currNode.next = currNode.child;
+      currNode.child.prev = currNode;
       currNode.child = null;
     }
     currNode = currNode.next;
