@@ -1,8 +1,4 @@
-import { List } from "immutable";
-
-class ListNode {
-  constructor(public value: number, public next: ListNode | null = null) {}
-}
+import { ListNode } from "./list-node";
 
 const reverseList = (head: ListNode | null): ListNode | null => {
   let prev = null;
