@@ -11,13 +11,30 @@ class TreeNode {
   }
 }
 
-const countNodes = (root: TreeNode | null): number => {
+function countNodes(root: TreeNode | null): number {
   if (!root) {
     return 0;
   }
+  return traverse(root);
+}
 
-  return 1 + countNodes(root.left) + countNodes(root.right);
-};
+function leftDepth(node: TreeNode | null): number {
+  if (!node) return 0;
+  return leftDepth(node.left) + 1;
+}
+
+function rightDepth(node: TreeNode | null): number {
+  if (!node) return 0;
+  return rightDepth(node.right) + 1;
+}
+
+function traverse(node: TreeNode | null): number {
+  const leftLen = leftDepth(node);
+  const rightLen = rightDepth(node);
+
+  if (leftLen === rightLen) return 2 ** leftLen - 1;
+  return traverse(node!.left) + traverse(node!.right) + 1;
+}
 
 assert.equal(countNodes(null), 0);
 assert.equal(countNodes(new TreeNode()), 1);
