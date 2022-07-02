@@ -16,21 +16,7 @@ const countNodes = (root: TreeNode | null): number => {
     return 0;
   }
 
-  const queue = [root];
-  let i = 0;
-  while (i !== queue.length) {
-    const currNode = queue[i];
-    if (currNode.left) {
-      queue.push(currNode.left);
-    }
-    if (currNode.right) {
-      queue.push(currNode.right);
-    }
-
-    i += 1;
-  }
-
-  return i;
+  return 1 + countNodes(root.left) + countNodes(root.right);
 };
 
 assert.equal(countNodes(null), 0);
