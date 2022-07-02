@@ -1,3 +1,5 @@
+import assert from "assert";
+
 class TreeNode {
   val: number;
   left: TreeNode | null;
@@ -9,38 +11,35 @@ class TreeNode {
   }
 }
 
-const traverse = (node: TreeNode | null, output: number[]) => {
-  if (!node) {
-    return;
+const dfs = (node: TreeNode, min: number, max: number): boolean => {
+  if (node.val <= min || node.val >= max) {
+    return false;
   }
+
   if (node.left) {
-    traverse(node.left, output);
+    if (!dfs(node.left, min, node.val)) {
+      return false;
+    }
   }
-  output.push(node.val);
+
   if (node.right) {
-    traverse(node.right, output);
-  }
-};
-
-function isValidBST(
-  root: (TreeNode & { min?: number; max?: number }) | null
-): boolean {
-  if (!root) {
-    return true;
-  }
-  // traverse tree in left-root-right
-  const output: number[] = [];
-
-  traverse(root, output);
-  console.log(output);
-
-  for (let i = 1; i < output.length; i += 1) {
-    if (output[i] <= output[i - 1]) {
+    if (!dfs(node.right, node.val, max)) {
       return false;
     }
   }
 
   return true;
+};
+
+function isValidBST(root: TreeNode | null): boolean {
+  if (!root) {
+    return true;
+  }
+
+  return dfs(root, -Infinity, Infinity);
 }
 
-isValidBST(new TreeNode(2, new TreeNode(1), new TreeNode(3)));
+assert.equal(
+  isValidBST(new TreeNode(2, new TreeNode(1), new TreeNode(3))),
+  true
+);
