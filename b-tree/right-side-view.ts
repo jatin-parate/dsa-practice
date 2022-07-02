@@ -12,32 +12,34 @@ class TreeNode {
 }
 
 const rightSideView = (root: TreeNode | null): Array<number> => {
+  const rightSideViewNodes: number[] = [];
+
   if (!root) {
-    return [];
+    return rightSideViewNodes;
   }
 
-  let queue = [root];
-  let nextLevelNodes: TreeNode[] = [];
-  const rightSideViewNodeValues: number[] = [root.val];
+  const queue = [root];
+  let i = 0;
+  let currLevelEndIndex = 0;
 
-  while (true) {
-    while (queue.length) {
-      const currNode = queue.shift()!;
-      if (currNode.left) {
-        nextLevelNodes.push(currNode.left);
-      }
-      if (currNode.right) {
-        nextLevelNodes.push(currNode.right);
-      }
+  while (i !== queue.length) {
+    const currNode = queue[i];
+    if (currNode.left) {
+      queue.push(currNode.left);
     }
-    if (nextLevelNodes.length) {
-      rightSideViewNodeValues.push(nextLevelNodes.at(-1)!.val);
-      queue = nextLevelNodes;
-      nextLevelNodes = [];
-    } else {
-      return rightSideViewNodeValues;
+    if (currNode.right) {
+      queue.push(currNode.right);
     }
+
+    if (i === currLevelEndIndex) {
+      currLevelEndIndex = queue.length - 1;
+      rightSideViewNodes.push(currNode.val);
+    }
+
+    i += 1;
   }
+
+  return rightSideViewNodes;
 };
 
 assert.deepEqual(rightSideView(new TreeNode(1)), [1]);
