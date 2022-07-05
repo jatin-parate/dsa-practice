@@ -7,51 +7,35 @@ const directions = [
   [0, -1], //left
 ];
 
-const matrixBfs = (
-  grid: string[][],
-  seen: boolean[][],
-  queue: [number, number][]
-): void => {
-  while (queue.length) {
-    const [currI, currJ] = queue.shift()!;
-
-    seen[currI][currJ] = true;
-
-    directions.forEach((direction) => {
-      const adjacentCell: [number, number] = [
-        currI + direction[0],
-        currJ + direction[1],
-      ];
-
-      if (
-        adjacentCell[0] >= 0 &&
-        adjacentCell[0] < grid.length &&
-        adjacentCell[1] >= 0 &&
-        adjacentCell[1] < grid[0].length &&
-        !seen[adjacentCell[0]][adjacentCell[1]] &&
-        grid[adjacentCell[0]][adjacentCell[1]] === "1"
-      ) {
-        queue.push(adjacentCell);
-        seen[adjacentCell[0]][adjacentCell[1]] = true;
-      }
-    });
+const matrixBfs = (grid: string[][], i: number, j: number): void => {
+  if (
+    i < 0 ||
+    j < 0 ||
+    i >= grid.length ||
+    j >= grid[0].length ||
+    grid[i][j] === "0" ||
+    grid[i][j] === "visited"
+  ) {
+    return;
   }
+  grid[i][j] = "visited";
+  directions.forEach((direction) => {
+    matrixBfs(grid, i + direction[0], j + direction[1]);
+  });
 };
 
 function numIslands(grid: string[][]): number {
-  const seen = grid.map((row) => row.map<boolean>(() => false));
   let totalIslands = 0;
 
   for (let i = 0; i < grid.length; i += 1) {
     for (let j = 0; j < grid[i].length; j += 1) {
-      if (seen[i][j] || grid[i][j] === "0") {
+      if (grid[i][j] === "0" || grid[i][j] === "visited") {
         continue;
       }
 
       // curr element not visited yet
-      let queue: [number, number][] = [[i, j]];
       totalIslands += 1;
-      matrixBfs(grid, seen, queue);
+      matrixBfs(grid, i, j);
     }
   }
 
