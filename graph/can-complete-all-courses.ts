@@ -1,35 +1,43 @@
 import assert from "assert";
 
-const canFinish = (
-  n: number,
-  preRequisites: [number, number][]
-): boolean => {
-  const adjMatrix: number[][] = new Array(n).fill(0).map(() => []);
+function canFinish(numCourses: number, prerequisites: number[][]): boolean {
+  const graph: Array<Array<number>> = new Array(numCourses)
+    .fill(null)
+    .map(() => []);
+  const nodesState = new Array(numCourses).fill(0);
 
-  preRequisites.forEach(([dependent, dependee]) => {
-    adjMatrix[dependee].push(dependent);
+  prerequisites.forEach((value) => {
+    graph[value[1]].push(value[0]);
   });
 
-  return adjMatrix.every((adjacentNodes, currNode) => {
-    const queue = [...adjacentNodes];
-    const seen = new Set<number>();
+  function dfs(index: number): boolean {
+    // visited in current dfs search
+    if (nodesState[index] === 1) {
+      return false;
+    }
 
-    while (queue.length) {
-      const current = queue.shift()!;
-      seen.add(current);
-      if (current === currNode) {
-        return false;
-      }
-      adjMatrix[current].forEach((ele) => {
-        if (!seen.has(ele)) {
-          queue.push(ele);
-        }
-      });
+    // already checked
+    if (nodesState[index] === 2) {
+      return true;
+    }
+
+    nodesState[index] = 1;
+
+    const result = graph[index].every((value) => dfs(value));
+
+    nodesState[index] = 2;
+
+    return result;
+  }
+
+  return graph.every((_, index) => {
+    if (nodesState[index] === 0) {
+      return dfs(index);
     }
 
     return true;
   });
-};
+}
 
 assert.equal(
   canFinish(6, [
