@@ -1,34 +1,41 @@
-const networkDelayTime = (
-  times: [number, number, number][],
+function networkDelayTime(
+  edges: [number, number, number][],
   n: number,
   k: number
-) => {
-  const distances = new Array(n).fill(Infinity);
-  const adjList = distances.map<[number, number][]>(() => []);
+): number {
+  k--;
+  const weights = new Array<number>(n).fill(Infinity);
+  const adjacencyMatrix: number[][] = new Array(n).fill(0);
+  adjacencyMatrix.forEach((_, i) => {
+    adjacencyMatrix[i] = new Array(i).fill(Infinity);
+  });
 
-  distances[k - 1] = 0;
-  const heap = new PriorityQueue((a, b) => distances[a] < distances[b]);
-  heap.push(k - 1);
+  edges.forEach(([source, target, time]) => {
+    source--;
+    target--;
+    adjacencyMatrix[source][target] = time;
+  });
 
-  for (let i = 0; i < times.length; i += 1) {
-    const [source, target, weight] = times[i];
-    adjList[source - 1].push([target - 1, weight]);
-  }
+  const queue: number[] = [k];
+  weights[k] = 0;
+  while (queue.length) {
+    const node = queue.shift()!;
 
-  while (!heap.isEmpty()) {
-    const currentVertex = heap.pop()!;
-    const adjacent = adjList[currentVertex];
-
-    for (let i = 0; i < adjacent.length; i++) {
-      const [neighboringVertex, weight] = adjacent[i];
-
-      if (distances[currentVertex] + weight < distances[neighboringVertex]) {
-        distances[neighboringVertex] = distances[currentVertex] + weight;
-        heap.push(neighboringVertex);
+    adjacencyMatrix[node].forEach((time, adjacentNode) => {
+      if (time === Infinity) {
+        return;
       }
-    }
+      const newWeight = weights[node] + time;
+      if (weights[adjacentNode] > newWeight) {
+        weights[adjacentNode] = newWeight;
+        queue.push(adjacentNode);
+      }
+    });
   }
 
-  const ans = Math.max(...distances);
-  return ans === Infinity ? -1 : ans;
-};
+  console.log(weights);
+
+  const totalTime = Math.max(...weights);
+
+  return totalTime === Infinity ? -1 : totalTime;
+}
