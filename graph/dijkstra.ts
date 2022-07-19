@@ -61,3 +61,10 @@ console.log(
     [3, 0, 5],
   ])
 );
+
+console.log(
+  dijkstra(3, 0, [
+    [0, 1, 8],
+    [2, 0, 3],
+  ])
+);
