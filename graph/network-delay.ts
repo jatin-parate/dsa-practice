@@ -1,41 +1,29 @@
 function networkDelayTime(
-  edges: [number, number, number][],
+  times: [number, number, number][],
   n: number,
   k: number
 ): number {
-  k--;
-  const weights = new Array<number>(n).fill(Infinity);
-  const adjacencyMatrix: number[][] = new Array(n).fill(0);
-  adjacencyMatrix.forEach((_, i) => {
-    adjacencyMatrix[i] = new Array(i).fill(Infinity);
-  });
+  const distances = new Array<number>(n).fill(Infinity);
+  distances[k - 1] = 0;
 
-  edges.forEach(([source, target, time]) => {
-    source--;
-    target--;
-    adjacencyMatrix[source][target] = time;
-  });
+  for (let i = 0; i < n - 1; i += 1) {
+    let count = 0;
+    for (let j = 0; j < times.length; j += 1) {
+      const source = times[j][0] - 1;
+      const target = times[j][1] - 1;
+      const weight = times[j][2];
 
-  const queue: number[] = [k];
-  weights[k] = 0;
-  while (queue.length) {
-    const node = queue.shift()!;
-
-    adjacencyMatrix[node].forEach((time, adjacentNode) => {
-      if (time === Infinity) {
-        return;
+      if (distances[source] + weight < distances[target]) {
+        distances[target] = distances[source] + weight;
+        count += 1;
       }
-      const newWeight = weights[node] + time;
-      if (weights[adjacentNode] > newWeight) {
-        weights[adjacentNode] = newWeight;
-        queue.push(adjacentNode);
-      }
-    });
+    }
+
+    if (count === 0) {
+      break;
+    }
   }
 
-  console.log(weights);
-
-  const totalTime = Math.max(...weights);
-
-  return totalTime === Infinity ? -1 : totalTime;
+  const ans = Math.max(...distances);
+  return ans === Infinity ? -1 : ans;
 }
