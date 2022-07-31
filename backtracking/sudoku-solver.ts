@@ -18,6 +18,7 @@ import assert from "assert";
   - board[i][j] is a digit or '.'.
   - It is guaranteed that the input board has only one solution.
  */
+
 const isEmpty = (value: string) => value === ".";
 
 const hasNextPosition = (currRow: number, currCol: number): boolean =>
@@ -57,13 +58,13 @@ const getValidValues = (
   }
 
   for (let currCol = 0; currCol < 9; currCol++) {
-    if (currCol !== col) {
+    if (currCol !== col && !(currCol >= minCol && currCol < maxCol)) {
       set.delete(board[row][currCol]);
     }
   }
 
   for (let currRow = 0; currRow < 9; currRow++) {
-    if (currRow !== row) {
+    if (currRow !== row && !(currRow >= minRow && currRow < maxRow)) {
       set.delete(board[currRow][col]);
     }
   }
@@ -71,11 +72,40 @@ const getValidValues = (
   return [...set.values()];
 };
 
+const fillObviousValues = (board: string[][]) => {
+  while (true) {
+    let row = 0;
+    let col = 0;
+    let isAdded = false;
+    while (row < 9 && col < 9) {
+      if (!isEmpty(board[row][col])) {
+        [row, col] = getNextPosition(row, col);
+        continue;
+      }
+
+      const validValues = getValidValues(board, row, col);
+      if (validValues.length === 1) {
+        board[row][col] = validValues[0];
+        isAdded = true;
+        break;
+      }
+      [row, col] = getNextPosition(row, col);
+    }
+
+    if (!isAdded) {
+      return;
+    }
+  }
+};
+
 function solveSudoku(
   board: string[][],
   currRow: number = 0,
   currCol: number = 0
 ) {
+  if (currRow === 0 && currCol === 0) {
+    fillObviousValues(board);
+  }
   if (currRow > 8 || currCol > 8) {
     // matrix is full already
     return true;
