@@ -5,42 +5,42 @@ interface IMonarchy {
 }
 
 class NArrayTree {
-  public children: NArrayTree[] = [];
+  #isDead = false;
+  #children: NArrayTree[] = [];
+  #name: string;
 
-  constructor(public name: string) {}
+  constructor(name: string) {
+    this.#name = name;
+  }
 
   birth(child: string, parent: string): boolean {
-    if (this.name === parent) {
+    if (this.#name === parent) {
       const newNode = new NArrayTree(child);
-      this.children.push(newNode);
+      this.#children.push(newNode);
       return true;
     }
 
-    return this.children.some((childNode) => childNode.birth(child, parent));
+    return this.#children.some((childNode) => childNode.birth(child, parent));
   }
 
   death(name: string): boolean {
-    return this.children.some((childNode, i) => {
-      if (childNode.name === name) {
-        if (childNode.children.length === 0) {
-          this.children.splice(i, 1);
-        } else {
-          const [firstChild] = childNode.children.splice(0, 1);
-          firstChild.children.push(...childNode.children);
-          this.children[i] = firstChild;
-        }
-        return true;
-      }
+    if (name === this.#name) {
+      this.#isDead = true;
+      return true;
+    }
 
+    return this.#children.some((childNode) => {
       return childNode.death(name);
     });
   }
 
-  getOrderOfSuccession() {
-    const succession: string[] = [this.name];
+  getOrderOfSuccession(succession: string[] = []) {
+    if (!this.#isDead) {
+      succession.push(this.#name);
+    }
 
-    this.children.forEach((childNode) => {
-      succession.push(...childNode.getOrderOfSuccession());
+    this.#children.forEach((childNode) => {
+      childNode.getOrderOfSuccession(succession);
     });
 
     return succession;
@@ -64,14 +64,8 @@ class Monarchy implements IMonarchy {
     if (!this.root) {
       throw new Error("All are dead already!");
     }
-
-    if (this.root.name === name && this.root.children.length === 0) {
-      this.root = null;
-      return;
-    }
-
     if (!this.root.death(name)) {
-      throw new Error("Person not found!");
+      throw new Error("Person not found");
     }
   }
 
