@@ -1,32 +1,27 @@
-function getLIS(nums: number[], i: number, dp: number[]): number {
+import runWithTimestamp from "../utils/runWithTimestamp";
+
+function getLIS(nums: number[], currentIndex: number, dp: number[]): number {
   let total = 1;
 
-  if (i === 0) {
-    return (dp[i] = total);
+  if (currentIndex === 0) {
+    return (dp[currentIndex] = total);
   }
 
-  if (i < 0) {
+  if (currentIndex < 0) {
     return total;
   }
 
   let max = total;
-  let j = i;
-  while (j >= 0) {
-    if (nums[j] >= nums[i]) {
-      j--;
-      continue;
-    }
-
-    if (dp[j] !== -1) {
+  let j = currentIndex;
+  while (j > -1) {
+    if (nums[j] < nums[currentIndex]) {
       max = Math.max(max, 1 + dp[j]);
-    } else {
-      max = Math.max(max, 1 + getLIS(nums, j, dp));
     }
 
     j--;
   }
 
-  return (dp[i] = max);
+  return (dp[currentIndex] = max);
 }
 
 /**
@@ -42,10 +37,13 @@ function lengthOfLIS(nums: number[]): number {
   for (let i = 1; i < nums.length; i++) {
     max = Math.max(max, getLIS(nums, i, dp));
   }
-  // console.log(dp);
 
   return max;
 }
 
-console.log(lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]));
-console.log(lengthOfLIS([0, 1, 0, 3, 2, 3]));
+runWithTimestamp(
+  () => lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]),
+  undefined,
+  "first"
+);
+runWithTimestamp(() => lengthOfLIS([0, 1, 0, 3, 2, 3]), undefined, "second");
