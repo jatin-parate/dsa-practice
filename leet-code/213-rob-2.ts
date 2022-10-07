@@ -2,18 +2,23 @@ function rob(nums: number[]): number {
   return Math.max(nums[0], helper(nums.slice(1)), helper(nums.slice(0, -1)));
 }
 
-function helper(nums: number[]) {
-  let rob1 = 0;
-  let rob2 = 0;
-  let newRob: number;
+function helper(nums: number[]): number {
+  let dp = new Array(nums.length).fill(-Infinity);
 
-  for (let n of nums) {
-    newRob = Math.max(rob1 + n, rob2);
-    rob1 = rob2;
-    rob2 = newRob;
+  for (let i = nums.length - 1; i >= 0; i--) {
+    if (i >= nums.length - 2) {
+      dp[i] = nums[i];
+    } else {
+      let currMax = nums[i];
+      for (let j = i + 2; j < nums.length; j++) {
+        currMax = Math.max(currMax, nums[i] + dp[j]);
+      }
+
+      dp[i] = currMax;
+    }
   }
 
-  return rob2;
+  return Math.max(...dp);
 }
 
 console.log(rob([2, 3, 2]));
