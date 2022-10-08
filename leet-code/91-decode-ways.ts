@@ -1,43 +1,29 @@
 function numDecodings(s: string, i = 0): number {
-  // Index overflowed
-  if (i >= s.length) {
-    return 1;
-  }
+  const dp = new Array(s.length).fill(0);
+  dp[s.length - 1] = s.charAt(s.length - 1) === "0" ? 0 : 1;
 
-  if (s[i] === "0") {
-    return 0;
-  }
-
-  // Current index can be last index
-  if (i === s.length - 1) {
-    return 1; // Because current one is not zero
-  }
-
-  // There is one more element after current one
-  if (s.charAt(i + 1) === "0") {
-    // Next one is zero and current one is not zero
-    // if these two are last group
-    if (i + 2 >= s.length) {
-      return 1;
+  for (let i = s.length - 2; i >= 0; i--) {
+    if (s.charAt(i) === "0") {
+      dp[i] = 0;
+    } else if (s.charAt(i + 1) === "0") {
+      if (Number.parseInt(s.charAt(i)) > 2) {
+        return 0;
+      }
+      dp[i] = i + 2 >= s.length ? 1 : dp[i + 2];
+    } else if (s.charAt(i) !== "1" && s.charAt(i) !== "2") {
+      dp[i] = dp[i + 1];
+    } else if (s.charAt(i) === "1") {
+      dp[i] = dp[i + 1] + (i + 2 >= s.length ? 1 : dp[i + 2]);
+    } else {
+      if (Number.parseInt(s.charAt(i + 1)) > 6) {
+        dp[i] = i + 2 >= s.length ? 1 : dp[i + 2];
+      } else {
+        dp[i] = dp[i + 1] + (i + 2 >= s.length ? 1 : dp[i + 2]);
+      }
     }
-    // there are more
-    return numDecodings(s, i + 2);
-  }
-  // next element is not zero
-  if (s.charAt(i) === "1") {
-    // there can be next element which can be grouped
-    return numDecodings(s, i + 1) + numDecodings(s, i + 2);
-  }
-  if (s.charAt(i) === "2") {
-    if (Number.parseInt(s.charAt(i + 1)) >= 7) {
-      return numDecodings(s, i + 2);
-    }
-
-    return numDecodings(s, i + 1) + numDecodings(s, i + 2);
   }
 
-  // only one group can be formed
-  return numDecodings(s, i + 1);
+  return dp[0];
 }
 
 console.log(numDecodings("12"));
