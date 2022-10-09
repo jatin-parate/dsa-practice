@@ -1,23 +1,22 @@
 function canJump(nums: number[], currIndex = 0): boolean {
-  if (currIndex === nums.length - 1) {
-    return true;
-  }
+  const dp = new Array(nums.length).fill(false);
+  dp[nums.length - 1] = true;
 
-  if (currIndex >= nums.length) {
-    return false;
-  }
+  for (let i = nums.length - 2; i >= 0; i--) {
+    let result = false;
+    for (let j = 1; j <= nums[i]; j++) {
+      const nextIndex = i + j;
 
-  if (nums[currIndex] === 0) {
-    return false;
-  }
-
-  for (let i = 1; i <= nums[currIndex]; i++) {
-    if (canJump(nums, currIndex + i)) {
-      return true;
+      if (nextIndex < nums.length && dp[nextIndex] === true) {
+        result = true;
+        break;
+      }
     }
+
+    dp[i] = result;
   }
 
-  return false;
+  return dp[0];
 }
 
 console.log(canJump([2, 3, 1, 1, 4]));
