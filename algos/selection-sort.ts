@@ -37,6 +37,8 @@ function selectionSort(arr: number[]): void {
   return;
 }
 
+export default undefined;
+
 const arr = [4, 3, 2, 1];
 selectionSort(arr);
 console.log(arr);
