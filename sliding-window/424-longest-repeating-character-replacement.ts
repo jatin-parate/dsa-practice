@@ -1,54 +1,20 @@
 function characterReplacement(s: string, k: number): number {
-  let start = 0,
-    end = 0,
-    l = 1,
-    map = new Map<string, number>();
+  let l = 0;
+  const count: Record<string, number> = {};
+  let res = 0;
 
-  map.set(s[0], 1);
+  for (let r = 0; r < s.length; r++) {
+    count[s[r]] = 1 + (count[s[r]] || 0);
 
-  while (end < s.length - 1) {
-    end++;
-    const nextChar = s[end];
-    map.set(nextChar, 1 + (map.get(nextChar) ?? 0));
-    let [[, largestCount], ...entries] = map.entries();
-    for (let entry of entries) {
-      if (entry[1] > largestCount) {
-        largestCount = entry[1];
-      }
+    while (r - l + 1 - Math.max(...Object.values(count)) > k) {
+      count[s[l]] -= 1;
+      l += 1;
     }
 
-    if (end - start + 1 - largestCount > k) {
-      while (start < end) {
-        // increment start
-        const currFreq = map.get(s[start])!;
-        if (currFreq < 2) {
-          map.delete(s[start]);
-        } else {
-          map.set(s[start], currFreq - 1);
-        }
-        start++;
-
-        // re-calculate largest count as start is changed
-        let [[, largestCount], ...entries] = map.entries();
-        for (let entry of entries) {
-          if (entry[1] > largestCount) {
-            largestCount = entry[1];
-          }
-        }
-
-        if (end - start + 1 - largestCount <= k) {
-          break;
-        }
-      }
-    }
-
-    if (end - start + 1 - largestCount <= k) {
-      // current substring is valid
-      l = Math.max(l, end - start + 1);
-    }
+    res = Math.max(res, r - l + 1);
   }
 
-  return l;
+  return res;
 }
 
 console.log(characterReplacement("ABAB", 2));
