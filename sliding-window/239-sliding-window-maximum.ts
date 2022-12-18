@@ -1,53 +1,22 @@
 export function maxSlidingWindow(nums: number[], k: number): number[] {
-  let start = 0,
-    end = start + k - 1;
-  let result: number[] = [];
+  const maxes: number[] = [];
+  let deQueue: { index: number; value: number }[] = [];
 
-  while (end < nums.length) {
-    let currentMaxIndex = start;
-    for (let i = start + 1; i <= end; i++) {
-      if (nums[i] > nums[currentMaxIndex]) currentMaxIndex = i;
+  for (let index = 0; index < nums.length; index++) {
+    // first element in queue is gone out of range of k
+    if (index >= k && deQueue[0].index + k === index) deQueue.shift();
+
+    let queueIndex = deQueue.length - 1;
+    while (deQueue.length > 0 && deQueue[deQueue.length - 1].value <= nums[index]) {
+      deQueue.pop();
+      queueIndex -= 1;
     }
+    deQueue.push({ index, value: nums[index] });
 
-    // find next maximum in the range of currentMaxIndex
-    let nextMaxIndex = -1;
-    for (
-      let i = currentMaxIndex + 1;
-      i < nums.length && i < currentMaxIndex + k;
-      i++
-    ) {
-      if (nums[i] > nums[currentMaxIndex]) {
-        nextMaxIndex = i;
-        break;
-      }
-    }
-
-    // console.log("going in loop");
-
-    while (
-      end < nums.length &&
-      start <= currentMaxIndex &&
-      (nextMaxIndex === -1 || end < nextMaxIndex)
-    ) {
-      // console.log(
-      //   nums[currentMaxIndex],
-      //   ":",
-      //   start,
-      //   "to",
-      //   end,
-      //   "with curr max index",
-      //   currentMaxIndex,
-      //   "and next max index",
-      //   nextMaxIndex
-      // );
-
-      result.push(nums[currentMaxIndex]);
-      start++;
-      end++;
-    }
+    if (index >= k - 1) maxes.push(deQueue[0].value);
   }
 
-  return result;
+  return maxes;
 }
 
 console.log(maxSlidingWindow([1, 3, -1, -3, 5, 3, 6, 7], 3));
