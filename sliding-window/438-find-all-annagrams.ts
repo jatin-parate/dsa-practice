@@ -26,22 +26,17 @@ export function findAnagrams(s: string, p: string): number[] {
   }
 
   let res: number[] = [];
+  for (let i = 0; i <= s.length - p.length; i++) {
+    if (i > 0) {
+      if (map.has(s[i - 1])) {
+        const lastFreq = map.get(s[i - 1])!;
+        map.set(s[i - 1], lastFreq - 1);
+      }
 
-  if (isEqual(pMap, map)) {
-    res.push(0);
-  }
-
-  for (let i = 1; i <= s.length - p.length; i++) {
-    const lastFreq = map.get(s[i - 1]) ?? 0;
-    if (lastFreq < 2) {
-      map.delete(s[i - 1]);
-    } else {
-      map.set(s[i - 1], lastFreq - 1);
-    }
-
-    if (pMap.has(s[i + p.length - 1])) {
-      let char = s[i + p.length - 1];
-      map.set(char, 1 + (map.get(char) ?? 0));
+      if (pMap.has(s[i + p.length - 1])) {
+        let char = s[i + p.length - 1];
+        map.set(char, 1 + (map.get(char) ?? 0));
+      }
     }
 
     if (isEqual(pMap, map)) {
