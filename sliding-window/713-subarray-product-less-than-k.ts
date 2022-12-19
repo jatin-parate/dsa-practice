@@ -1,22 +1,20 @@
 export function numSubarrayProductLessThanK(nums: number[], k: number): number {
-  let res = 0;
+  if (k <= 1) return 0;
 
-  for (let i = 0; i < nums.length; i++) {
-    if (nums[i] >= k) {
-      continue;
-    }
+  let start = 0,
+    end = 0,
+    count = 0,
+    prod = 1;
 
-    res++;
-    let product = nums[i];
-    for (let j = i + 1; j < nums.length; j++) {
-      product *= nums[j];
-      if (product >= k) {
-        break;
-      }
-
-      res++;
-    }
+  while (end < nums.length) {
+    prod *= nums[end];
+    while (prod >= k) prod /= nums[start++];
+    count += 1 + (end - start);
+    end++;
   }
 
-  return res;
+  return count;
 }
+
+console.log(numSubarrayProductLessThanK([10, 5, 2, 6], 100));
+console.log(numSubarrayProductLessThanK([1, 1, 1, 1], 2));
