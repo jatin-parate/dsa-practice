@@ -1,4 +1,4 @@
-function checkPossibility(arr: number[]): boolean {
+export function checkPossibility(arr: number[]): boolean {
   let isReplaced = false;
   for (let i = 1; i < arr.length; i += 1) {
     if (arr[i] < arr[i - 1]) {
