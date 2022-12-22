@@ -12,16 +12,18 @@ export function minKBitFlips(nums: number[], k: number): number {
 
   let start = 0;
   let totalFlips = 0;
+  const MAX_START = nums.length - k;
 
-  while (start <= nums.length - k) {
+  while (start <= MAX_START) {
     if (start === oneIndexes[0]) {
       start += 1;
       oneIndexes.shift();
-      if (start <= nums.length - k) {
-        if (nums[start + k - 1] === 0) {
-          zeroIndexes.push(start + k - 1);
+      if (start <= MAX_START) {
+        const lastNewIndex = start + k - 1;
+        if (nums[lastNewIndex] === 0) {
+          zeroIndexes.push(lastNewIndex);
         } else {
-          oneIndexes.push(start + k - 1);
+          oneIndexes.push(lastNewIndex);
         }
       }
 
@@ -33,8 +35,6 @@ export function minKBitFlips(nums: number[], k: number): number {
     oneIndexes = tmp;
     totalFlips += 1;
   }
-
-  // console.log(zeroIndexes, oneIndexes, totalFlips);
 
   return zeroIndexes.length === 0 ? totalFlips : -1;
 }
