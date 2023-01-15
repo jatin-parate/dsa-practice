@@ -1,11 +1,5 @@
-class ListNode {
-  val: number;
-  next: ListNode | null;
-  constructor(val?: number, next?: ListNode | null) {
-    this.val = val === undefined ? 0 : val;
-    this.next = next === undefined ? null : next;
-  }
-}
+import assert from "assert";
+import { arrayToList, ListNode, listToArray } from "./utils";
 
 export function removeNthFromEnd(
   head: ListNode | null,
@@ -37,3 +31,17 @@ export function removeNthFromEnd(
 
   return head;
 }
+
+assert.deepEqual(
+  listToArray(removeNthFromEnd(arrayToList([5, 4, 3, 2, 1]), 5)),
+  [4, 3, 2, 1]
+);
+assert.deepEqual(
+  listToArray(removeNthFromEnd(arrayToList([1, 2, 3, 4, 5]), 2)),
+  [1, 2, 3, 5]
+);
+assert.deepEqual(
+  listToArray(removeNthFromEnd(arrayToList([1, 2, 3, 4, 5]), 20)),
+  [1, 2, 3, 4, 5]
+);
+assert.deepEqual(listToArray(removeNthFromEnd(arrayToList([]), 20)), []);

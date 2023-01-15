@@ -1,13 +1,5 @@
 import assert from "assert";
-
-class ListNode {
-  val: number;
-  next: ListNode | null;
-  constructor(val?: number, next?: ListNode | null) {
-    this.val = val === undefined ? 0 : val;
-    this.next = next === undefined ? null : next;
-  }
-}
+import { arrayToList, listToArray, ListNode } from "./utils";
 
 function findMidAndSplitList(head: ListNode): ListNode {
   let slow = head,
@@ -71,34 +63,6 @@ export function sortSinglyLinkedList(head: ListNode | null): ListNode | null {
     sortSinglyLinkedList(head),
     sortSinglyLinkedList(secondHead)
   );
-}
-
-function listToArray(head: ListNode | null): number[] {
-  const arr: number[] = [];
-  while (head) {
-    arr.push(head.val);
-    head = head.next;
-  }
-
-  return arr;
-}
-
-function arrayToList(arr: number[]): ListNode | null {
-  let head: ListNode | null = null;
-  let p: ListNode | null = null;
-  for (let num of arr) {
-    const node = new ListNode(num);
-
-    if (!head) {
-      head = node;
-      p = head;
-    } else {
-      p!.next = node;
-      p = p!.next;
-    }
-  }
-
-  return head;
 }
 
 assert.deepEqual(
