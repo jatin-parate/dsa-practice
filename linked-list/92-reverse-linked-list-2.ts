@@ -1,52 +1,49 @@
 import { ListNode, arrayToList, listToArray } from "./utils";
 import assert from "node:assert";
 
-function reverse(front: ListNode, rear: ListNode): void {
-  let prev = front,
-    cur = front.next,
-    next = cur?.next,
-    last = rear.next;
-
-  while (cur && cur !== last) {
-    cur.next = prev;
-    prev = cur;
-    cur = next ?? null;
-    next = next?.next ?? null;
-  }
-}
-
 function reverseBetween(
   head: ListNode | null,
   left: number,
   right: number
 ): ListNode | null {
-  if (!head) return null;
-
-  const dummy = new ListNode(0, head);
-  let front: ListNode;
-  let preFront: ListNode = dummy;
-  let rear: ListNode;
-  let postRear: ListNode | null = null;
-
-  for (let i = 1, curr: ListNode = head; i <= right; i++, curr = curr.next!) {
-    if (i === left) {
-      front = curr;
-    } else if (!front!) {
-      preFront = curr;
-    }
-
-    if (i === right) {
-      rear = curr;
-      postRear = curr.next;
-    }
+  if (head === null || left === right) {
+    return head;
   }
 
-  reverse(front!, rear!);
+  // Iterate until left pointer is left node
+  // keep pointer to node before reversing begins, which is pointer to the end of the list after reversal
+  // reverse nodes between left and right
+  // Connect the pre-tail node to the tail node by access through pre-left pointer
+  // connect pre-left pointer to start of reversed list
+  let leftPointer = head;
+  let preLeftPointer = null;
+  let i = 1;
+  for (i; i < left; i++) {
+    preLeftPointer = leftPointer;
+    leftPointer = leftPointer.next!;
+  }
 
-  preFront.next = rear!;
-  front!.next = postRear;
+  let lastNodeOfSubList = leftPointer;
+  let lastNodeBeforeReversal = preLeftPointer;
 
-  return dummy.next;
+  let prev = null;
+  let tmpNext;
+  while (i <= right) {
+    tmpNext = leftPointer.next;
+    leftPointer.next = prev;
+    prev = leftPointer;
+    leftPointer = tmpNext!;
+    i++;
+  }
+
+  if (lastNodeBeforeReversal !== null) {
+    lastNodeBeforeReversal.next = prev;
+  } else {
+    head = prev;
+  }
+
+  lastNodeOfSubList.next = leftPointer;
+  return head;
 }
 
 export { reverseBetween };
