@@ -4,37 +4,19 @@ import { arrayToList, ListNode, listToArray } from "./utils";
 export function insertionSortList(head: ListNode | null): ListNode | null {
   if (!head || !head.next) return head;
 
-  let tmp: ListNode | null = head.next;
+  let dummy = new ListNode(0);
+  let prev = dummy;
 
-  while (tmp) {
-    let p: ListNode = head;
-    let prev: ListNode = head;
-
-    while (p.val <= tmp.val && p !== tmp) {
-      prev = p;
-      p = p.next!;
-    }
-
-    if (p !== tmp) {
-      let last: ListNode = p;
-      while (last.next !== tmp) {
-        last = last.next!;
-      }
-
-      last.next = tmp.next;
-      tmp.next = p;
-
-      if (p === head) {
-        head = tmp;
-      } else {
-        prev.next = tmp;
-      }
-    }
-
-    tmp = tmp.next;
+  while (head != null) {
+    let next: ListNode | null = head.next;
+    if (prev.val >= head.val) prev = dummy;
+    while (prev.next && prev.next.val < head.val) prev = prev.next;
+    head.next = prev.next;
+    prev.next = head;
+    head = next;
   }
 
-  return head;
+  return dummy.next;
 }
 
 assert.deepEqual(
