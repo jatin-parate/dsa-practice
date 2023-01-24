@@ -6,6 +6,43 @@ function reverseBetween(
   left: number,
   right: number
 ): ListNode | null {
+  if (head === null || left >= right) return head;
+
+  const dummy = new ListNode(0, head);
+  let curr: ListNode = head;
+  let pre: ListNode = dummy;
+  let preFront: ListNode = dummy;
+
+  for (let i = 1; i <= left; i += 1) {
+    if (i === left - 1) {
+      preFront = curr;
+    }
+    pre = curr;
+    curr = curr.next!;
+  }
+
+  let next: ListNode | null = curr.next;
+
+  for (let i = left; i < right; i += 1) {
+    curr.next = pre;
+    pre = curr;
+    curr = next!;
+    next = next?.next ?? null;
+  }
+
+  const front = preFront.next!;
+  preFront.next = pre;
+  front.next = curr;
+
+  return dummy.next;
+}
+
+/**
+function reverseBetween(
+  head: ListNode | null,
+  left: number,
+  right: number
+): ListNode | null {
   if (head === null || left === right) {
     return head;
   }
@@ -44,7 +81,7 @@ function reverseBetween(
 
   lastNodeOfSubList.next = leftPointer;
   return head;
-}
+} */
 
 export { reverseBetween };
 
