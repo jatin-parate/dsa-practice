@@ -4,8 +4,10 @@ export function rotateRight(head: ListNode | null, k: number): ListNode | null {
   if (!head || k < 1) return head;
 
   let totalNodes = 0;
+  let rightListTail: ListNode = head;
   for (let curr: ListNode | null = head; curr != null; curr = curr.next) {
     totalNodes += 1;
+    rightListTail = curr;
   }
 
   k = k % totalNodes;
@@ -19,11 +21,6 @@ export function rotateRight(head: ListNode | null, k: number): ListNode | null {
 
     firstListTail = rightListHead;
     rightListHead = rightListHead.next;
-  }
-
-  let rightListTail = rightListHead;
-  while (rightListTail.next) {
-    rightListTail = rightListTail.next;
   }
 
   rightListTail.next = head;
