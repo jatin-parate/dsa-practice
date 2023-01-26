@@ -11,14 +11,18 @@
  */
 
 export function hasCycle(head: ListNode | null): boolean {
-  const set = new Set<ListNode>();
-  while (head) {
-    if (set.has(head)) {
+  if (!head) return false;
+  
+  let slow = head;
+  let fast = head?.next?.next;
+
+  while (fast) {
+    if (slow === fast) {
       return true;
     }
 
-    set.add(head);
-    head = head.next;
+    slow = slow.next!;
+    fast = fast.next?.next;
   }
 
   return false;
