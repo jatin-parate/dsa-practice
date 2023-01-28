@@ -8,6 +8,10 @@ function dfs(
   const stack = [root];
   const visited = new Set<TreeNode>();
 
+  if (!root.left && root.right) {
+    stack.push(root.right);
+  }
+
   while (stack.length > 0) {
     if (stack.at(-1)!.left && !visited.has(stack.at(-1)!.left!)) {
       let left = stack.at(-1)!.left;
@@ -18,6 +22,11 @@ function dfs(
     }
 
     const lastNode = stack.at(-1)!;
+    if (visited.has(lastNode)) {
+      stack.pop();
+      continue;
+    }
+
     processNode(lastNode, stack);
     visited.add(lastNode);
 
@@ -38,13 +47,17 @@ function dfs(
 
 export function goodNodes(root: TreeNode | null): number {
   if (!root) return 1;
-  const goodNodes = new Set<TreeNode>();
+  let count = 0;
 
   dfs(root, (node, stack) => {
     const x = node.val;
 
     if (stack.length === 1) {
-      goodNodes.add(node);
+      // console.log(
+      //   x,
+      //   stack.map((node) => node.val)
+      // );
+      count++;
       return;
     }
 
@@ -52,19 +65,24 @@ export function goodNodes(root: TreeNode | null): number {
       if (stack[i].val > x) {
         return;
       }
-
-      if (goodNodes.has(stack[i])) {
-        goodNodes.add(node);
-        return;
-      }
     }
 
-    goodNodes.add(node);
-    return;
+    // console.log(
+    //   x,
+    //   stack.map((node) => node.val)
+    // );
+    count += 1;
   });
 
-  return goodNodes.size;
+  return count;
 }
+
+assert.equal(
+  goodNodes(
+    new TreeNode(1, new TreeNode(4, new TreeNode(6, null, new TreeNode(10))))
+  ),
+  4
+);
 
 assert.equal(
   goodNodes(
@@ -83,3 +101,14 @@ assert.equal(
 );
 
 assert.equal(goodNodes(new TreeNode(1)), 1);
+
+assert.equal(
+  goodNodes(
+    new TreeNode(
+      2,
+      null,
+      new TreeNode(4, new TreeNode(10), new TreeNode(8, new TreeNode(4)))
+    )
+  ),
+  4
+);
