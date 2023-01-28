@@ -14,12 +14,12 @@ export function copyRandomList(head: Node | null): Node | null {
 
   const map = new Map<Node, Node>();
 
-  for (let curr = head; curr.next; curr = curr.next) {
+  for (let curr: Node | null = head; curr; curr = curr.next) {
     const copy = new Node(curr.val);
     map.set(curr, copy);
   }
 
-  for (let curr = head; curr.next; curr = curr.next) {
+  for (let curr: Node | null = head; curr; curr = curr.next) {
     const currCopy = map.get(curr)!;
     // set next pointer
     if (curr.next) {
