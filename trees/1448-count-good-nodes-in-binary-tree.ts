@@ -1,39 +1,22 @@
 import assert from "assert";
-import { dfsWithStack } from "./dfs-with-stack";
+import { recursiveDFS } from "./recursive-dfs";
 import { TreeNode } from "./utils";
-
-function dfs(node: TreeNode, stack: TreeNode[]) {
-  stack.push(node);
-  let count = 0;
-
-  if (node.left) {
-    count += dfs(node.left, stack);
-  }
-
-  if (node.right) {
-    count += dfs(node.right, stack);
-  }
-
-  let isBroken = false;
-  for (let i = 0; i < stack.length; i += 1) {
-    if (stack[i].val > node.val) {
-      isBroken = true;
-      break;
-    }
-  }
-
-  if (!isBroken) {
-    count += 1;
-  }
-
-  stack.pop();
-  return count;
-}
 
 export function goodNodes(root: TreeNode | null): number {
   if (!root) return 0;
 
-  return dfs(root, []);
+  let count = 0;
+
+  recursiveDFS(root, [], (node, stack) => {
+    for (let i = stack.length - 2; i >= 0; i -= 1) {
+      if (stack[i].val > node.val) {
+        return;
+      }
+    }
+
+    count += 1;
+  });
+  return count;
 }
 
 assert.equal(
