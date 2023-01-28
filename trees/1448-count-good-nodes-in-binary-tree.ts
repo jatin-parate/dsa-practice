@@ -1,80 +1,39 @@
 import assert from "assert";
+import { dfsWithStack } from "./dfs-with-stack";
 import { TreeNode } from "./utils";
 
-function dfs(
-  root: TreeNode,
-  processNode: (node: TreeNode, stack: TreeNode[]) => void
-) {
-  const stack = [root];
-  const visited = new Set<TreeNode>();
+function dfs(node: TreeNode, stack: TreeNode[]) {
+  stack.push(node);
+  let count = 0;
 
-  if (!root.left && root.right) {
-    stack.push(root.right);
+  if (node.left) {
+    count += dfs(node.left, stack);
   }
 
-  while (stack.length > 0) {
-    if (stack.at(-1)!.left && !visited.has(stack.at(-1)!.left!)) {
-      let left = stack.at(-1)!.left;
-      while (left) {
-        stack.push(left);
-        left = stack.at(-1)!.left;
-      }
-    }
+  if (node.right) {
+    count += dfs(node.right, stack);
+  }
 
-    const lastNode = stack.at(-1)!;
-    if (visited.has(lastNode)) {
-      stack.pop();
-      continue;
-    }
-
-    processNode(lastNode, stack);
-    visited.add(lastNode);
-
-    if (lastNode.right && !visited.has(lastNode.right)) {
-      stack.push(lastNode.right);
-    } else {
-      stack.pop();
-      if (
-        stack.length > 0 &&
-        stack.at(-1)!.right &&
-        !visited.has(stack.at(-1)!.right!)
-      ) {
-        stack.push(stack.at(-1)!.right!);
-      }
+  let isBroken = false;
+  for (let i = 0; i < stack.length; i += 1) {
+    if (stack[i].val > node.val) {
+      isBroken = true;
+      break;
     }
   }
+
+  if (!isBroken) {
+    count += 1;
+  }
+
+  stack.pop();
+  return count;
 }
 
 export function goodNodes(root: TreeNode | null): number {
-  if (!root) return 1;
-  let count = 0;
+  if (!root) return 0;
 
-  dfs(root, (node, stack) => {
-    const x = node.val;
-
-    if (stack.length === 1) {
-      // console.log(
-      //   x,
-      //   stack.map((node) => node.val)
-      // );
-      count++;
-      return;
-    }
-
-    for (let i = stack.length - 1; i >= 0; i -= 1) {
-      if (stack[i].val > x) {
-        return;
-      }
-    }
-
-    // console.log(
-    //   x,
-    //   stack.map((node) => node.val)
-    // );
-    count += 1;
-  });
-
-  return count;
+  return dfs(root, []);
 }
 
 assert.equal(
