@@ -9,7 +9,7 @@ class TreeNode {
   }
 }
 
-class BSTIterator {
+export class BSTIterator {
   private readonly stack: TreeNode[] = [];
 
   constructor(private root: TreeNode | null) {
