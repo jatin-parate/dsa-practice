@@ -1,21 +1,19 @@
 import assert from "assert";
-import { recursiveDFS } from "./recursive-dfs";
 import { TreeNode } from "./utils";
 
-export function goodNodes(root: TreeNode | null): number {
+export function goodNodes(root: TreeNode | null, max = -Infinity): number {
   if (!root) return 0;
 
   let count = 0;
 
-  recursiveDFS(root, [], (node, stack) => {
-    for (let i = stack.length - 2; i >= 0; i -= 1) {
-      if (stack[i].val > node.val) {
-        return;
-      }
-    }
-
+  if (root.val >= max) {
+    max = root.val;
     count += 1;
-  });
+  }
+
+  if (root.left) count += goodNodes(root.left, max);
+  if (root.right) count += goodNodes(root.right, max);
+
   return count;
 }
 
