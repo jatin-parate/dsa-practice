@@ -1,52 +1,14 @@
 import assert from "node:assert";
 
-export function numTrees(n: number): number {
-  let count = 0;
-  const dp: number[] = [0, 1, 2];
+export function numTrees(n: number, dp: number[] = [1, 1, 2]): number {
+  if (dp[n] !== undefined) return dp[n];
 
+  let count = 0;
   for (let i = 1; i <= n; i += 1) {
-    count += fn(1, i, n, dp);
+    count += numTrees(i - 1, dp) * numTrees(n - i, dp);
   }
 
-  return count;
-}
-
-function fn(min: number, root: number, max: number, dp: number[]): number {
-  let count = 0;
-  const leftTreeNodesCount = root - min;
-  const rightTreeNodesCount = max - root;
-
-  if (leftTreeNodesCount > 1) {
-    if (dp[leftTreeNodesCount] === undefined) {
-      let newLeftTreeNodesCount = 0;
-      for (let i = min; i < root; i += 1) {
-        newLeftTreeNodesCount += fn(min, i, root - 1, dp);
-      }
-
-      dp[leftTreeNodesCount] = newLeftTreeNodesCount;
-    }
-
-    count = dp[leftTreeNodesCount];
-  }
-
-  if (rightTreeNodesCount > 1) {
-    if (dp[rightTreeNodesCount] === undefined) {
-      let newRightTreeNodesCount = 0;
-
-      for (let i = root + 1; i <= max; i += 1) {
-        newRightTreeNodesCount += fn(root + 1, i, max, dp);
-      }
-
-      dp[rightTreeNodesCount] = newRightTreeNodesCount;
-    }
-
-    count =
-      count == 0 ? dp[rightTreeNodesCount] : count * dp[rightTreeNodesCount];
-  }
-
-  if (count === 0) return 1;
-
-  return count;
+  return (dp[n] = count);
 }
 
 assert.equal(numTrees(6), 132);
