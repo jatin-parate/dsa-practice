@@ -1,5 +1,11 @@
 import { TreeNode } from "../trees/utils";
 
+type Arr = [boolean, boolean];
+function mergeBoolArray(first: Arr, second: Arr): void {
+  first[0] = first[0] || second[0];
+  first[1] = first[1] || second[1];
+}
+
 export function lowestCommonAncestor(
   root: TreeNode | null,
   p: TreeNode | null,
@@ -9,16 +15,15 @@ export function lowestCommonAncestor(
   let isFound = false;
   let ancestor: TreeNode | null = null;
 
-  function dfs(node: TreeNode | null): [boolean, boolean] {
+  function dfs(node: TreeNode | null): Arr {
     if (isFound) return [true, true];
     if (!node) return [false, false];
 
-    let res: [boolean, boolean] = [false, false];
+    let res: Arr = [false, false];
     if (node === p) res[0] = true;
     if (node === q) res[1] = true;
 
-    const leftRes = dfs(node.left);
-    res = [res[0] || leftRes[0], res[1] || leftRes[1]];
+    mergeBoolArray(res, dfs(node.left));
 
     if (isFound) return [true, true];
 
@@ -28,8 +33,7 @@ export function lowestCommonAncestor(
       return res;
     }
 
-    const rightRes = dfs(node.right);
-    res = [res[0] || rightRes[0], res[1] || rightRes[1]];
+    mergeBoolArray(res, dfs(node.right));
 
     if (isFound) return [true, true];
 
